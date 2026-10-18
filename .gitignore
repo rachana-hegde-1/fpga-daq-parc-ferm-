@@ -1,0 +1,17 @@
+# Generated simulation files
+*.vcd
+*.fst
+*.lxt
+*.lxt2
+*.vvp
+
+# Build outputs
+build/
+out/
+obj_dir/
+
+# Editor and operating system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

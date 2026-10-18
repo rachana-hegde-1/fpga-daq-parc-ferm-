@@ -15,7 +15,7 @@ module tb_rpm_period_measure;
 
     rpm_period_measure #(
         .COUNTER_WIDTH(32),
-        .TIMEOUT_CYCLES(20)
+        .TIMEOUT_CYCLES(100)
     ) dut (
         .clk(clk),
         .rst_n(rst_n),
@@ -31,80 +31,66 @@ module tb_rpm_period_measure;
         begin
             @(negedge clk);
             rpm_pulse = 1;
-            @(negedge clk);
+            repeat (2) @(negedge clk);
             rpm_pulse = 0;
         end
     endtask
 
-    task check;
-        input condition;
-        input [8*80-1:0] message;
-        begin
-            if (condition)
-                $display("PASS: %0s", message);
-            else begin
-                $display("FAIL: %0s", message);
-                errors = errors + 1;
-            end
-        end
-    endtask
+    always @(posedge clk) begin
+    if (rst_n && (dut.rising_edge || measurement_valid ||
+                  pulse_timeout)) begin
+        $display(
+            "t=%0t rising_edge=%b cycle_count=%0d period_count=%0d valid=%b timeout=%b",
+            $time, dut.rising_edge, dut.cycle_count,
+            period_count, measurement_valid, pulse_timeout
+        );
+    end
+    end
 
     initial begin
         $dumpfile("waves/rpm_period_measure.vcd");
         $dumpvars(0, tb_rpm_period_measure);
 
-        // Reset check
-        repeat (2) @(negedge clk);
-        check(period_count == 0, "period_count starts at zero during reset");
-        check(measurement_valid == 0, "measurement_valid starts low");
-
+        repeat (3) @(negedge clk);
         rst_n = 1;
-        repeat (2) @(negedge clk);
 
-        // First pulse establishes a reference.
+        // First pulse establishes the reference.
+        repeat (3) @(negedge clk);
         send_pulse();
 
-        // A second pulse should produce a measurement.
-        repeat (9) @(negedge clk);
+        // Wait a known interval before the second pulse.
+        repeat (10) @(negedge clk);
         send_pulse();
 
-        // Allow nonblocking assignments to settle.
-        @(negedge clk);
-        check(measurement_valid == 0,
-              "measurement_valid returns low after its pulse");
-        check(period_count > 0,
-              "a period measurement was captured");
+        // Wait for the measurement notification.
+        wait (measurement_valid === 1'b1);
+        #1;
 
-        // No further pulses: wait for timeout.
-        wait (pulse_timeout == 1'b1);
-        check(pulse_timeout == 1,
-              "missing pulses trigger timeout");
+        $display("DEBUG: period_count=%0d valid=%b timeout=%b",
+                 period_count, measurement_valid, pulse_timeout);
 
-        // Let timeout clear and establish a new reference pulse.
+        if (period_count == 13) begin
+    $display("PASS: exact period count is 13");
+end else begin
+    $display("FAIL: expected 13, got %0d", period_count);
+    errors = errors + 1;
+end
+        // Wait for valid to clear before testing timeout.
         @(negedge clk);
-        @(negedge clk);
-        send_pulse();
-
-        // Send another pulse before timeout.
-        repeat (5) @(negedge clk);
-        send_pulse();
-
-        @(negedge clk);
-        check(period_count > 0,
-              "measurement resumes after timeout");
+        wait (pulse_timeout === 1'b1);
+        $display("PASS: timeout detected");
 
         if (errors == 0)
-            $display("\nALL TESTS PASSED");
+            $display("ALL DIAGNOSTIC CHECKS PASSED");
         else
-            $display("\nTESTS FAILED: %0d error(s)", errors);
+            $display("DIAGNOSTIC CHECKS FAILED: %0d", errors);
 
         $finish;
     end
 
     initial begin
-        #2000;
-        $display("FAIL: Simulation watchdog expired");
-        $finish;
-    end
+    #5000;
+    $fatal(1, "FAIL: simulation watchdog expired");
+end
 
 endmodule

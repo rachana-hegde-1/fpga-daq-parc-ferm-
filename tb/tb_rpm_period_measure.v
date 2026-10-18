@@ -79,6 +79,43 @@ end
         @(negedge clk);
         wait (pulse_timeout === 1'b1);
         $display("PASS: timeout detected");
+        
+        // Reset during operation: outputs must clear immediately.
+        @(negedge clk);
+        rst_n = 0;
+        #1;
+
+        if (period_count == 0 &&
+            measurement_valid == 0 &&
+            pulse_timeout == 0) begin
+            $display("PASS: reset clears measurement outputs");
+        end else begin
+            $fatal(1, "FAIL: reset did not clear measurement outputs");
+        end
+
+        // Release reset cleanly on a falling clock edge.
+        @(negedge clk);
+        rst_n = 1;
+        repeat (3) @(negedge clk);
+
+
+        // Recovery: first pulse establishes a new reference.
+        send_pulse();
+
+        // Second pulse arrives after a controlled interval.
+        repeat (5) @(negedge clk);
+        send_pulse();
+
+        // Wait for the measurement notification.
+        wait (measurement_valid === 1'b1);
+        #1;
+
+        if (period_count == 8) begin
+            $display("PASS: recovery measurement has expected period count");
+        end else begin
+            $fatal(1, "FAIL: recovery expected 8, got %0d", period_count);
+        end
+
 
         if (errors == 0)
             $display("ALL DIAGNOSTIC CHECKS PASSED");

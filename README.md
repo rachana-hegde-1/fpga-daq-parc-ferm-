@@ -1,4 +1,4 @@
-# FPGA DAQ � PARC FERM
+# FPGA DAQ — PARC FERMÉ
 
 Simulation-first FPGA-based data acquisition system for vehicle measurements.
 

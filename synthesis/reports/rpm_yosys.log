@@ -1,0 +1,188 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2025  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.57+178 (git sha1 cb9d0b6ff, g++ 11.4.0-1ubuntu1~22.04.2 -fPIC -O3)
+
+-- Running command `read_verilog rtl/rpm_period_measure.v; hierarchy -check -top rpm_period_measure; proc; opt; check; stat' --
+
+1. Executing Verilog-2005 frontend: rtl/rpm_period_measure.v
+Parsing Verilog input from `rtl/rpm_period_measure.v' to AST representation.
+verilog frontend filename rtl/rpm_period_measure.v
+Generating RTLIL representation for module `\rpm_period_measure'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \rpm_period_measure
+
+2.2. Analyzing design hierarchy..
+Top module:  \rpm_period_measure
+Removed 0 unused modules.
+
+3. Executing PROC pass (convert processes to netlists).
+
+3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 3 switch rules as full_case in process $proc$rtl/rpm_period_measure.v:27$3 in module rpm_period_measure.
+Removed a total of 0 dead cases.
+
+3.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 5 redundant assignments.
+Promoted 0 assignments to connections.
+
+3.4. Executing PROC_INIT pass (extract init attributes).
+
+3.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\rpm_period_measure.$proc$rtl/rpm_period_measure.v:27$3'.
+
+3.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~4 debug messages>
+
+3.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\rpm_period_measure.$proc$rtl/rpm_period_measure.v:27$3'.
+     1/8: $0\pulse_timeout[0:0]
+     2/8: $0\measurement_valid[0:0]
+     3/8: $0\rpm_sync2_d[0:0]
+     4/8: $0\rpm_sync2[0:0]
+     5/8: $0\rpm_sync1[0:0]
+     6/8: $0\have_previous_pulse[0:0]
+     7/8: $0\cycle_count[31:0]
+     8/8: $0\period_count[31:0]
+
+3.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+3.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\rpm_period_measure.\period_count' using process `\rpm_period_measure.$proc$rtl/rpm_period_measure.v:27$3'.
+  created $adff cell `$procdff$45' with positive edge clock and positive level reset.
+Creating register for signal `\rpm_period_measure.\measurement_valid' using process `\rpm_period_measure.$proc$rtl/rpm_period_measure.v:27$3'.
+  created $adff cell `$procdff$50' with positive edge clock and positive level reset.
+Creating register for signal `\rpm_period_measure.\pulse_timeout' using process `\rpm_period_measure.$proc$rtl/rpm_period_measure.v:27$3'.
+  created $adff cell `$procdff$55' with positive edge clock and positive level reset.
+Creating register for signal `\rpm_period_measure.\rpm_sync1' using process `\rpm_period_measure.$proc$rtl/rpm_period_measure.v:27$3'.
+  created $adff cell `$procdff$60' with positive edge clock and positive level reset.
+Creating register for signal `\rpm_period_measure.\rpm_sync2' using process `\rpm_period_measure.$proc$rtl/rpm_period_measure.v:27$3'.
+  created $adff cell `$procdff$65' with positive edge clock and positive level reset.
+Creating register for signal `\rpm_period_measure.\rpm_sync2_d' using process `\rpm_period_measure.$proc$rtl/rpm_period_measure.v:27$3'.
+  created $adff cell `$procdff$70' with positive edge clock and positive level reset.
+Creating register for signal `\rpm_period_measure.\cycle_count' using process `\rpm_period_measure.$proc$rtl/rpm_period_measure.v:27$3'.
+  created $adff cell `$procdff$75' with positive edge clock and positive level reset.
+Creating register for signal `\rpm_period_measure.\have_previous_pulse' using process `\rpm_period_measure.$proc$rtl/rpm_period_measure.v:27$3'.
+  created $adff cell `$procdff$80' with positive edge clock and positive level reset.
+
+3.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 4 empty switches in `\rpm_period_measure.$proc$rtl/rpm_period_measure.v:27$3'.
+Removing empty process `rpm_period_measure.$proc$rtl/rpm_period_measure.v:27$3'.
+Cleaned up 4 empty switches.
+
+3.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module rpm_period_measure.
+<suppressed ~16 debug messages>
+
+4. Executing OPT pass (performing simple optimizations).
+
+4.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module rpm_period_measure.
+
+4.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\rpm_period_measure'.
+<suppressed ~21 debug messages>
+Removed a total of 7 cells.
+
+4.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \rpm_period_measure..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+      Replacing known input bits on port A of cell $procmux$23: \have_previous_pulse -> 1'0
+      Replacing known input bits on port A of cell $procmux$21: \have_previous_pulse -> 1'1
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~18 debug messages>
+
+4.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \rpm_period_measure.
+Performed a total of 0 changes.
+
+4.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\rpm_period_measure'.
+Removed a total of 0 cells.
+
+4.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $procdff$45 ($adff) from module rpm_period_measure (D = \cycle_count, Q = \period_count).
+Adding EN signal on $procdff$75 ($adff) from module rpm_period_measure (D = $procmux$34_Y, Q = \cycle_count).
+
+4.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \rpm_period_measure..
+Removed 4 unused cells and 41 unused wires.
+<suppressed ~5 debug messages>
+
+4.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module rpm_period_measure.
+<suppressed ~1 debug messages>
+
+4.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \rpm_period_measure..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~15 debug messages>
+
+4.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \rpm_period_measure.
+Performed a total of 0 changes.
+
+4.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\rpm_period_measure'.
+Removed a total of 0 cells.
+
+4.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \rpm_period_measure..
+
+4.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module rpm_period_measure.
+
+4.16. Finished fast OPT passes. (There is nothing left to do.)
+
+5. Executing CHECK pass (checking for obvious problems).
+Checking module rpm_period_measure...
+Found and reported 0 problems.
+
+6. Printing statistics.
+
+=== rpm_period_measure ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       28 wires
+      214 wire bits
+       12 public wires
+       74 public wire bits
+        6 ports
+       37 port bits
+       25 cells
+        1   $add
+        6   $adff
+        2   $adffe
+        1   $and
+        1   $ge
+       11   $mux
+        1   $not
+        1   $reduce_and
+        1   $reduce_bool
+
+End of script. Logfile hash: 208946ee77, CPU: user 0.05s system 0.01s, MEM: 19.00 MB peak
+Yosys 0.57+178 (git sha1 cb9d0b6ff, g++ 11.4.0-1ubuntu1~22.04.2 -fPIC -O3)
+Time spent: 24% 4x opt_expr (0 sec), 20% 2x read_verilog (0 sec), ...

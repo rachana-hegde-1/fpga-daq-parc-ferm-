@@ -1,0 +1,12 @@
+VCD info: dumpfile waves/rpm_period_measure.vcd opened for output.
+t=95000 rising_edge=1 cycle_count=0 period_count=0 valid=0 timeout=0
+t=225000 rising_edge=1 cycle_count=13 period_count=0 valid=0 timeout=0
+DEBUG: period_count=13 valid=1 timeout=0
+PASS: exact period count is 13
+t=235000 rising_edge=0 cycle_count=1 period_count=13 valid=1 timeout=0
+PASS: timeout detected
+PASS: reset clears measurement outputs
+t=1305000 rising_edge=1 cycle_count=0 period_count=0 valid=0 timeout=0
+t=1385000 rising_edge=1 cycle_count=8 period_count=0 valid=0 timeout=0
+PASS: recovery measurement has expected period count
+ALL DIAGNOSTIC CHECKS PASSED
